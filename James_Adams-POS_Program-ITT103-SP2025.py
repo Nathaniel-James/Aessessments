@@ -9,7 +9,7 @@ class Product:
     def __str__(self):
         return f"Product Name: {self.name}, Price: {self.price}, Quantity: {self.quantity}"
 
-
+#This checks if the products are in stock
 class Availability:
     def __init__(self, product_catalog):
         self.product_catalog = product_catalog
@@ -51,10 +51,10 @@ class POS:
             "Shampoo": Product("Shampoo", 300, 6),
             "Conditioner": Product("Conditioner", 300, 6),
         }
-        self.cart = {}
+        self.cart = {}     #This stores the products when selected by the user
         self.availability_checker = Availability(self.products)  # Passes products to Availability class
 
-    def add_to_cart(self, product_name, quantity):
+    def add_to_cart(self, product_name, quantity):    #This adds the products to the cart
         product_name = product_name.title()
         stock_message = self.availability_checker.check_stock(product_name, quantity)
 
@@ -72,7 +72,7 @@ class POS:
         product.quantity -= quantity  # Takes from stock
         print(f"{quantity} {product_name}(s) added to cart. {product.quantity} remaining in stock.")
 
-    def remove_from_cart(self, product_name, quantity):
+    def remove_from_cart(self, product_name, quantity):     #This remove items from the cart
         product_name = product_name.title()
         if product_name in self.cart:
             if quantity >= self.cart[product_name]["quantity"]:
@@ -85,7 +85,7 @@ class POS:
             print("Item not in cart.")
 
 
-    def view_cart(self):
+    def view_cart(self):    #Allows user to view items that in the cart
         if not self.cart:
             print("Cart is empty.")
         else:
@@ -97,16 +97,16 @@ class POS:
                 print(f"{item}: {details['quantity']} x ${details['price']} = ${item_total}")
             print(f"Subtotal is: ${total}")
 
-    def checkout(self):
+    def checkout(self):               #This is used to check out items that are in the cart and validates payment
             if not self.cart:
-                print("Car is empty. Cannot proceed to checkout.")
+                print("Cart is empty. Cannot proceed to checkout.")
                 return
             subtotal = sum(details["price"] * details["quantity"] for details in self.cart.values())
             tax = subtotal * 0.10
             total = subtotal + tax
             discount = 0
             if total > 5000:
-                discount = total * 0.05
+                discount = total * 0.05       #Calculate discount if total is greater than 5000 dollars
                 print(f"Discount (5% over 5000): -${discount}")
             print(f"Total amount is: ${total}")
             while True:
@@ -116,14 +116,14 @@ class POS:
                         print("Insufficient payment. Try again.")
                     else:
                         change = amount_paid - total
-                        print(f"change: ${change}")
+                        print(f"Change: ${change}")
                         self.generate_receipt(subtotal, tax, discount, total, amount_paid, change)
-                        self.cart.clear()
+                        self.cart.clear()    #This clears the cart after each payment
                         break
                 except ValueError:
                     print("Invalid input. Enter a valid amount.")
 
-    def generate_receipt(self, subtotal, tax, discount, total, amount_paid, change):
+    def generate_receipt(self, subtotal, tax, discount, total, amount_paid, change):    #This generates receipt
            print("\n---- Receipt ----")
            print("Best Buy Retail Store")
            print("----------------------------------") #to add space to text
@@ -138,12 +138,12 @@ class POS:
                print(f"Total: ${total}")
                print(f"Amount Paid: ${amount_paid}")
                print(f"Change ${change}")
-               print("Thank you for shopping With Best Buy")
+               print("Thank you for shopping with Best Buy Retail Store")
 
-
+#This displays the menu
     def start(self):
             while True:
-                print("\n--- Pos System Gang---")
+                print("\n--- POS System Gang---")
                 print("1. View Product")
                 print("2. Add to cart")
                 print("3. Remove from cart")
@@ -174,7 +174,7 @@ class POS:
                 elif choice == "5":
                     self.checkout()
                 elif choice == "6":
-                    print("Exiting Pos System bye.")
+                    print("Exiting POS System. Goodbye!")
                     break
                 else:
                     print("Invalid option Entered.")
